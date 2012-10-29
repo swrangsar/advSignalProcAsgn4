@@ -1,4 +1,15 @@
-function ulaData = generateULAData()
+function ulaData = generateULAData(numberOfSensors, numberOfSnapshots, secondAngle)
+
+centerFrequecncy = 4000;
+spacing = 0.5;
+firstAngle = 0;
+
+sourceMatrix1 = getSourceMatrix(numberOfSensors, numberOfSnapshots, firstAngle, spacing, centerFrequecncy);
+sourceMatrix2 = getSourceMatrix(numberOfSensors, numberOfSnapshots, secondAngle, spacing, centerFrequecncy);
+sourceMatrix = sourceMatrix1 + sourceMatrix2;
+
+ulaData = sourceMatrix + getErrorMatrix(numberOfSensors, numberOfSnapshots);
+
 
 end
 
@@ -6,7 +17,7 @@ end
 
 function directionVector = getDirectionVector(angle, spacing, numberOfSensors, centerFrequency)
 
-wavelength = spacing * 2;
+wavelength = 1;
 speedOfPropagation = centerFrequency * wavelength;
 wc = 2 * pi * centerFrequency;
 angle = angle * pi / 180;
@@ -14,5 +25,43 @@ k = 1:numberOfSensors;
 delay = (k - 1) .* (spacing * sin(angle) / speedOfPropagation);
 directionVector = exp(-1i * wc * delay);
 directionVector = directionVector(:);
+
+end
+
+%% get a source signal
+
+function sourceSignal = getSourceSignal(numberOfSnapshots)
+
+sourceSignal = wgn(1, numberOfSnapshots, 1, 'linear', 'complex');
+
+end
+
+%% get an error signal
+
+function errorSignal = getErrorSignal(numberOfSnapshots)
+
+errorSignal = wgn(1, numberOfSnapshots, 1, 'linear', 'complex');
+
+end
+
+%% get an error matrix
+
+function errorMatrix = getErrorMatrix(numberOfSensors, numberOfSnapshots)
+
+errorSignalCell = cell(numberOfSensors, 1);
+for k = 1:numberOfSensors
+    errorSignalCell{k} = getErrorSignal(numberOfSnapshots);
+end
+errorMatrix = cat(1, errorSignalCell{:});
+
+end
+
+%% get a source matrix 
+
+function sourceMatrix = getSourceMatrix(numberOfSensors, numberOfSnapshots, angle, spacing, centerFrequency)
+
+sourceSignal = getSourceSignal(numberOfSnapshots);
+directionVector = getDirectionVector(angle, spacing, numberOfSensors, centerFrequency);
+sourceMatrix = directionVector * sourceSignal;
 
 end
