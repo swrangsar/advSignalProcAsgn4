@@ -6,7 +6,43 @@ addpath /Users/swrangsarbasumatary/Desktop/advSignalProcAsgn4/
 %% do beamforming 
 
 ULAData = getMonteCarloUlaData(50, 15);
-phi = beamform(ULAData, 16, 0.5);
+phi = beamform(ULAData, 64, 0.5);
+figure(100); clf;
+plot(phi); axis tight;
+title('Beamforming data');
+
+
+%% do Capon beamforming 
+
+phiCapon = capon_sp(ULAData, 64, 0.5);
+figure(200); clf;
+plot(phiCapon); axis tight;
+title('Capon beamforming data');
+
+%% do root MUSIC and plot spectrum
+
+doaMusic = root_music_doa(ULAData, 2, 0.5)
+rootMusicSpectrum = getSpectrum(doaMusic .* (pi/180));
+w = -(length(rootMusicSpectrum)/2):(length(rootMusicSpectrum)/2)-1;
+w = 360 * w ./ length(rootMusicSpectrum);
+figure(300); clf;
+plot(w, rootMusicSpectrum);
+axis tight;
+title('Root Music spectrum of ULA data');
+xlabel('Frequency (rad/s)');
+
+%% do  ESPRIT and plot spectrum
+
+doaESPRIT = esprit_doa(ULAData, 2, 0.5)
+espritSpectrum = getSpectrum(doaESPRIT .* (pi/180));
+w = -(length(espritSpectrum)/2):(length(espritSpectrum)/2)-1;
+w = 360 * w ./ length(espritSpectrum);
+figure(400); clf;
+plot(w, espritSpectrum);
+axis tight;
+title('ESPRIT spectrum of ULA data');
+xlabel('Angles  (rad/s)');
+
 
 rmpath /Users/swrangsarbasumatary/Desktop/advSignalProcAsgn4/
 rmpath /Users/swrangsarbasumatary/Desktop/advSignalProcAsgn4/ch6/
