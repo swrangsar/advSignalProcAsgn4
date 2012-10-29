@@ -1,0 +1,16 @@
+function ulaData = generateULAData()
+
+end
+
+%% make array transfer vector a(theta)
+
+function directionVector = getDirectionVector(angle, spacing, n, c)
+
+wc = 2 * pi * c; % because wavelength is being considered 1
+angle = angle * pi / 180;
+k = 1:m;
+delay = (k - 1) .* (spacing * sin(angle) / c);
+directionVector = exp(-1i * wc * delay);
+directionVector = directionVector(:);
+
+end
