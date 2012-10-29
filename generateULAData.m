@@ -10,7 +10,6 @@ sourceMatrix = sourceMatrix1 + sourceMatrix2;
 
 ulaData = sourceMatrix + getErrorMatrix(numberOfSensors, numberOfSnapshots);
 
-
 end
 
 %% make array transfer vector a(theta)

@@ -1,0 +1,6 @@
+function avgUlaData = getMonteCarloUlaData(numberOfRealizations)
+
+m = 10; N = 100;
+
+avgUlaData = get
+end
